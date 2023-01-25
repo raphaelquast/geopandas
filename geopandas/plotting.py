@@ -133,7 +133,7 @@ def _PolygonPatch(polygon, **kwargs):
 
 
 def _plot_polygon_collection(
-    ax, geoms, values=None, color=None, cmap=None, vmin=None, vmax=None, **kwargs
+    ax, geoms, values=None, color=None, cmap=None, vmin=None, vmax=None, autolim=True, **kwargs
 ):
     """
     Plots a collection of Polygon and MultiPolygon geometries to `ax`
@@ -154,6 +154,8 @@ def _plot_polygon_collection(
         Color to fill the polygons. Cannot be used together with `values`.
     color : single color or sequence of `N` colors
         Sets both `edgecolor` and `facecolor`
+    autolim : bool, optional
+        If True, autoscale the plot-extent to fit the data.
     **kwargs
         Additional keyword arguments passed to the collection
 
@@ -188,7 +190,7 @@ def _plot_polygon_collection(
         if "norm" not in kwargs:
             collection.set_clim(vmin, vmax)
 
-    ax.add_collection(collection, autolim=True)
+    ax.add_collection(collection, autolim=autolim)
     ax.autoscale_view()
     return collection
 
@@ -197,7 +199,7 @@ plot_polygon_collection = deprecated(_plot_polygon_collection)
 
 
 def _plot_linestring_collection(
-    ax, geoms, values=None, color=None, cmap=None, vmin=None, vmax=None, **kwargs
+    ax, geoms, values=None, color=None, cmap=None, vmin=None, vmax=None, autolim=True, **kwargs
 ):
     """
     Plots a collection of LineString and MultiLineString geometries to `ax`
@@ -213,13 +215,14 @@ def _plot_linestring_collection(
         have 1:1 correspondence with the geometries (not their components).
     color : single color or sequence of `N` colors
         Cannot be used together with `values`.
-
+    autolim : bool, optional
+        If True, autoscale the plot-extent to fit the data.
     Returns
     -------
     collection : matplotlib.collections.Collection that was plotted
     """
     from matplotlib.collections import LineCollection
-
+    
     geoms, multiindex = _sanitize_geoms(geoms)
     if values is not None:
         values = np.take(values, multiindex, axis=0)
@@ -246,7 +249,7 @@ def _plot_linestring_collection(
         if "norm" not in kwargs:
             collection.set_clim(vmin, vmax)
 
-    ax.add_collection(collection, autolim=True)
+    ax.add_collection(collection, autolim=autolim)
     ax.autoscale_view()
     return collection
 
